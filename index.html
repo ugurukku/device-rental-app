@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cihaz İcarəsi Formu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        .form-container {
+            padding: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .required {
+            color: #ef4444;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.2s;
+            background: #f9fafb;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload input[type=file] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            background: #f9fafb;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .file-upload-label:hover {
+            border-color: #4f46e5;
+            background: #f0f4ff;
+        }
+        
+        .file-upload-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: #6b7280;
+        }
+        
+        .file-preview {
+            margin-top: 12px;
+            display: none;
+        }
+        
+        .file-preview img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .checkbox-group input[type=checkbox] {
+            width: auto;
+            margin: 0;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #6b7280;
+            border: 2px solid #e5e7eb;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 12px;
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            border-color: #4f46e5;
+            color: #4f46e5;
+        }
+        
+        .success-message {
+            background: #10b981;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .error-message {
+            background: #ef4444;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #4f46e5;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-container {
+                padding: 24px;
+            }
+            
+            .header {
+                padding: 24px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Cihaz İcarəsi Formu</h1>
+            <p>Anketi dəqiq və düzgün doldurmağınız xahiş olunur. Bu anket əsasında cihazları girovla və ya girovsuz icarəyə verməyi təyin edirik.</p>
+        </div>
+        
+        <div class="form-container">
+            <div id="successMessage" class="success-message">
+                ✅ Forma uğurla göndərildi! Tezliklə sizinlə əlaqə saxlayacağıq.
+            </div>
+            
+            <div id="errorMessage" class="error-message">
+                ❌ Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.
+            </div>
+            
+            <div id="loadingMessage" class="loading">
+                <div class="spinner"></div>
+                <p>Forma göndərilir...</p>
+            </div>
+            
+            <form id="rentalForm">
+                <div class="form-group">
+                    <label for="firstTime">Xidmətimizdən ilk dəfədir istifadə edirsiniz? <span class="required">*</span></label>
+                    <select id="firstTime" name="firstTime" required>
+                        <option value="">Seçim edin</option>
+                        <option value="yes">Bəli, ilk dəfədir</option>
+                        <option value="no">Xeyr, əvvəl də istifadə etmişəm</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Əlaqə nömrəniz <span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" placeholder="Nümunə: 0705003100" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deliveryDate">Çatdırılma tarixi <span class="required">*</span></label>
+                    <input type="date" id="deliveryDate" name="deliveryDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="rentalPeriod">İcarə müddəti <span class="required">*</span></label>
+                    <select id="rentalPeriod" name="rentalPeriod" required>
+                        <option value="">Seçim edin</option>
+                        <option value="1-week">1 həftə</option>
+                        <option value="2-weeks">2 həftə</option>
+                        <option value="1-month">1 ay</option>
+                        <option value="3-months">3 ay</option>
+                        <option value="6-months">6 ay</option>
+                        <option value="1-year">1 il</option>
+                        <option value="custom">Fərdi müddət</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="delivery">Çatdırılma və quraşdırılma <span class="required">*</span></label>
+                    <select id="delivery" name="delivery" required>
+                        <option value="">Seçim edin</option>
+                        <option value="delivery-installation">Çatdırılma + Quraşdırılma</option>
+                        <option value="delivery-only">Yalnız çatdırılma</option>
+                        <option value="self-pickup">Özüm götürəcəm</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="returnPickup">Ünvanınızdan geri təhvil <span class="required">*</span></label>
+                    <select id="returnPickup" name="returnPickup" required>
+                        <option value="">Seçim edin</option>
+                        <option value="yes">Bəli, ünvanımdan götürün</option>
+                        <option value="no">Xeyr, özüm gətirəcəm</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="documentPhoto">Şəxsiyyət vəsiqəsi şəkli <span class="required">*</span></label>
+                        <div class="file-upload">
+                            <input type="file" id="documentPhoto" name="documentPhoto" accept="image/*" required>
+                            <div class="file-upload-label">
+                                <div class="file-upload-icon">📄</div>
+                                <div>Şəxsiyyət vəsiqəsinin şəklini yükləyin</div>
+                                <small style="color: #6b7280; margin-top: 4px;">JPG, PNG (max 5MB)</small>
+                            </div>
+                            <div class="file-preview" id="documentPreview"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userPhoto">Şəxsi şəkil <span class="required">*</span></label>
+                        <div class="file-upload">
+                            <input type="file" id="userPhoto" name="userPhoto" accept="image/*" required>
+                            <div class="file-upload-label">
+                                <div class="file-upload-icon">🤳</div>
+                                <div>Şəxsi şəklinizi yükləyin</div>
+                                <small style="color: #6b7280; margin-top: 4px;">JPG, PNG (max 5MB)</small>
+                            </div>
+                            <div class="file-preview" id="userPreview"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Əlavə qeyd və ya promokod</label>
+                    <textarea id="notes" name="notes" rows="4" placeholder="İstək, qeyd və ya promokod varsa qeyd edin..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">"Qaydalar və Şərtlər" ilə razıyam <span class="required">*</span></label>
+                    </div>
+                </div>
+                
+                <button type="button" class="btn-secondary" onclick="showTerms()">📋 Qaydalar və Şərtlər</button>
+                <button type="button" class="btn-secondary" onclick="showDeliveryPrices()">🚀 Çatdırılma Qiymətləri</button>
+                
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    📩 Formanı Göndər
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // File upload preview functionality
+        function setupFilePreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        setupFilePreview('documentPhoto', 'documentPreview');
+        setupFilePreview('userPhoto', 'userPreview');
+        
+        // Form validation and submission
+        document.getElementById('rentalForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Show loading
+            loadingMessage.style.display = 'block';
+            submitBtn.disabled = true;
+            
+            try {
+                // Collect form data
+                const formData = new FormData();
+                
+                // Add form fields
+                formData.append('firstTime', document.getElementById('firstTime').value);
+                formData.append('phone', document.getElementById('phone').value);
+                formData.append('deliveryDate', document.getElementById('deliveryDate').value);
+                formData.append('rentalPeriod', document.getElementById('rentalPeriod').value);
+                formData.append('delivery', document.getElementById('delivery').value);
+                formData.append('returnPickup', document.getElementById('returnPickup').value);
+                formData.append('notes', document.getElementById('notes').value);
+                formData.append('terms', document.getElementById('terms').checked);
+                formData.append('timestamp', new Date().toISOString());
+                
+                // Add files
+                const documentPhoto = document.getElementById('documentPhoto').files[0];
+                const userPhoto = document.getElementById('userPhoto').files[0];
+                
+                if (documentPhoto) formData.append('documentPhoto', documentPhoto);
+                if (userPhoto) formData.append('userPhoto', userPhoto);
+                
+                // TODO: Replace with your actual backend endpoint
+                // For now, simulate success after 2 seconds
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Simulate successful submission
+                console.log('Form data to be sent:', Object.fromEntries(formData));
+                
+                // Show success message
+                loadingMessage.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Reset form
+                document.getElementById('rentalForm').reset();
+                document.getElementById('documentPreview').style.display = 'none';
+                document.getElementById('userPreview').style.display = 'none';
+                
+                // Scroll to top to show success message
+                document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+                
+            } catch (error) {
+                console.error('Submission error:', error);
+                loadingMessage.style.display = 'none';
+                errorMessage.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Set minimum date to today
+        document.getElementById('deliveryDate').min = new Date().toISOString().split('T')[0];
+        
+        // Helper functions for buttons
+        function showTerms() {
+            alert('Qaydalar və Şərtlər:\n\n1. Cihazlar yalnız müəyyən edilmiş müddətə icarəyə verilir\n2. Gecikdirmə halında əlavə haqqlar tətbiq edilir\n3. Cihazın zədələnməsi halında təmir xərcləri müştəri tərəfindən ödənilir\n4. İcarə haqqı əvvəlcədən ödənilməlidir\n\n(Bu yalnız nümunədir, faktiki qaydaları əlavə edin)');
+        }
+        
+        function showDeliveryPrices() {
+            alert('Çatdırılma Qiymətləri:\n\n📍 Şəhər daxili: 10 AZN\n📍 Şəhər ətrafı (15km): 20 AZN\n📍 Rayonlar: 30-50 AZN\n\n🔧 Quraşdırma: 15 AZN\n🚚 Geri təhvil: 10 AZN\n\n(Bu yalnız nümunədir, faktiki qiymətləri əlavə edin)');
+        }
+        
+        // Phone number formatting (Azerbaijani format)
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 10) value = value.slice(0, 10);
+            
+            if (value.length >= 3) {
+                value = value.replace(/(\d{3})(\d{0,3})(\d{0,4})/, (match, p1, p2, p3) => {
+                    let formatted = p1;
+                    if (p2) formatted += p2;
+                    if (p3) formatted += p3;
+                    return formatted;
+                });
+            }
+            
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>
